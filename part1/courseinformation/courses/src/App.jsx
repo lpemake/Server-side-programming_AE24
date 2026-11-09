@@ -4,16 +4,16 @@ const Header = (props) => {
   )
 }
  
-const Part = (props) => <p>{props.part.name} {props.part.exercises}</p>
+const Part = (props) => <li>{props.part.name} {props.part.exercises}</li>
 
 const Content = (props) => {
   console.log("Content", props)
   return (
-    <div>
-      <Part part = {props.parts[0]} />
-      <Part part = {props.parts[1]} />     
-      <Part part = {props.parts[2]} />
-    </div>   
+    <ul>
+      {props.parts.map(part =>
+        <Part key={part.name} part={part} />
+      )}
+    </ul>   
   )
 }
 
