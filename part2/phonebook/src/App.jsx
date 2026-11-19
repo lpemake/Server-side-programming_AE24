@@ -1,9 +1,16 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const Person = ({person}) => <li>{person.name} {person.number}</li>
+const Person = ({person, handleDelete}) => {
+  return (
+    <li>
+      {person.name} {person.number}
+      <button onClick={handleDelete}> Delete</button>
+    </li>
+  )
+}
 
-const Persons = ({persons}) => {
+const Persons = ({persons, handleDelete}) => {
   console.log(persons)
 
   return(
@@ -11,14 +18,16 @@ const Persons = ({persons}) => {
       <h2>Numbers</h2>
       <ul>
         {persons.map(person =>
-          <Person key={person.name} person={person} />
+          <Person key={person.name} person={person}
+            handleDelete={() => handleDelete(person.id)} />
         )}
       </ul>
     </div>
   )
 }
 
-const PersonForm = ({addPerson, newName,newNameOnChange, newNumber, newNumberOnChange}) => {
+const PersonForm = ({addPerson, newName,newNameOnChange,
+  newNumber, newNumberOnChange}) => {
 
   return (
     <form onSubmit={addPerson}>
@@ -81,6 +90,14 @@ const App = () => {
     setNewNumber('')
   }  
 
+  const handleDelete = (id) => {
+    const url = `http://localhost:3001/persons/${id}`
+
+    axios.delete(url).then(response => {
+      setPersons(persons.filter(p => p.id !== id))
+    })
+  }    
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -91,7 +108,7 @@ const App = () => {
         newNumber={newNumber}
         newNumberOnChange={event => setNewNumber(event.target.value)}
       />
-      <Persons persons={persons} />
+      <Persons persons={persons} handleDelete={handleDelete}/>
     </div>
   )
 }
